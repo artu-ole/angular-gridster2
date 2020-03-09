@@ -79,6 +79,7 @@ export interface Draggable extends DragBase {
   ignoreContent: boolean;
   dragHandleClass: string;
   dropOverItems: boolean;
+  moveElementAfterDrag: boolean;
   dropOverItemsCallback: (source: GridsterItem, target: GridsterItem, grid?: GridsterComponentInterface) => void;
 }
 
