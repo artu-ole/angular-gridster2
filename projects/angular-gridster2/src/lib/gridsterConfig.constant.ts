@@ -74,6 +74,7 @@ export const GridsterConfigService: GridsterConfig = {
     stop: undefined, // callback when dragging an item stops.  Accepts Promise return to cancel/approve drag.
     start: undefined, // callback when dragging an item starts.
     // Arguments: item, gridsterItem, event
+    moveElementAfterDrag: false, // element position is not updated until dragging stops
     dropOverItems: false, // enable drop items on top other item
     dropOverItemsCallback: undefined // callback on drop over another item
     // Arguments: source, target, gridComponent
