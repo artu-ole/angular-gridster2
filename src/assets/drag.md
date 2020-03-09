@@ -13,3 +13,4 @@ draggable.dropOverItems | enable items drop over another, will work if swap and 
 draggable.dropOverItemsCallback | callback when dragging an item drops over another item | Function(sourceItem, targetItem, grid) | undefined
 disableScrollHorizontal | enable/disable auto horizontal scrolling when on edge of grid | Boolean | false
 disableScrollVertical | enable/disable auto vertical scrolling when on edge of grid | Boolean | false
+moveElementAfterDrag | element position will change only on drag stop | Boolean | false
