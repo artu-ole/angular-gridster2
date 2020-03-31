@@ -1,5 +1,5 @@
 {
-  "name": "angular-gridster2",
+  "name": "@visit/angular-gridster2",
   "version": "9.1.0",
   "license": "MIT",
   "peerDependencies": {
@@ -14,6 +14,10 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/tiberiuzuld/angular-gridster2.git"
+  },
+  "publishConfig": {
+    "access": "restricted",
+    "registry": "https://nexus.visit.fi/repository/npm-releases/"
   },
   "description": "Angular gridster 2",
   "keywords": [
