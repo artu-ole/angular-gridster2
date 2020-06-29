@@ -3,14 +3,15 @@ import {ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation} from '@an
 import {CompactType, DisplayGrid, GridsterConfig, GridsterItem, GridsterItemComponentInterface, GridType} from 'angular-gridster2';
 
 @Component({
-  selector: 'app-items',
-  templateUrl: './items.component.html',
+  selector: 'app-trackby',
+  templateUrl: './trackBy.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
-export class ItemsComponent implements OnInit {
+export class TrackByComponent implements OnInit {
   options: GridsterConfig;
   dashboard: Array<GridsterItem>;
+  dashboardOriginal: Array<GridsterItem>;
 
   static itemInit(item: GridsterItem, itemComponent: GridsterItemComponentInterface): void {
     // tslint:disable-next-line:no-console
@@ -49,7 +50,7 @@ export class ItemsComponent implements OnInit {
         rows: 1,
         y: 0,
         x: 0,
-        initCallback: ItemsComponent.itemInit,
+        initCallback: TrackByComponent.itemInit,
         minItemCols: 1,
         maxItemCols: 100,
         maxItemRows: 100,
@@ -58,13 +59,15 @@ export class ItemsComponent implements OnInit {
         maxItemArea: 2500,
         dragEnabled: true,
         resizeEnabled: true,
-        compactEnabled: true
+        compactEnabled: true,
+        id: '0',
       },
-      {cols: 2, rows: 2, y: 0, x: 2},
-      {cols: 1, rows: 1, y: 0, x: 4},
-      {cols: 3, rows: 2, y: 1, x: 4},
-      {cols: 1, rows: 1, y: 2, x: 1}
+      {cols: 2, rows: 2, y: 0, x: 2, id: '1'},
+      {cols: 1, rows: 1, y: 0, x: 4, id: '2'},
+      {cols: 3, rows: 2, y: 1, x: 4, id: '3'},
+      {cols: 1, rows: 1, y: 2, x: 1, id: '4'}
     ];
+    this.dashboardOriginal = this.dashboard.map(x => ({...x}));
   }
 
   changedOptions(): void {
@@ -73,13 +76,11 @@ export class ItemsComponent implements OnInit {
     }
   }
 
-  removeItem($event: MouseEvent | TouchEvent, item): void {
-    $event.preventDefault();
-    $event.stopPropagation();
-    this.dashboard.splice(this.dashboard.indexOf(item), 1);
+  reset(): void {
+    this.dashboard = this.dashboardOriginal.map(x => ({...x}));
   }
 
-  addItem(): void {
-    this.dashboard.push({x: 0, y: 0, cols: 1, rows: 1});
+  trackBy(index: number, item: GridsterItem): number {
+    return item.id;
   }
 }

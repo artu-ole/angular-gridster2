@@ -5,7 +5,11 @@
   "projects": {
     "gridster-app": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:application": {
+          "strict": true
+        }
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -40,9 +44,9 @@
                 }
               ],
               "baseHref": "/angular-gridster2/",
-              "optimization": true,
+              "optimization": false,
               "outputHashing": "all",
-              "sourceMap": false,
+              "sourceMap": true,
               "extractCss": true,
               "namedChunks": false,
               "aot": true,
@@ -53,7 +57,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "5mb"
+                  "maximumError": "6mb"
                 },
                 {
                   "type": "anyComponentStyle",

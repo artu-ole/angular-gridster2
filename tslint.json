@@ -1,6 +1,12 @@
 {
   "extends": "tslint:recommended",
   "rules": {
+    "align": {
+      "options": [
+        "parameters",
+        "statements"
+      ]
+    },
     "array-type": false,
     "arrow-parens": false,
     "arrow-return-shorthand": true,
@@ -64,6 +70,7 @@
     "no-bitwise": true,
     "no-conflicting-lifecycle": true,
     "no-consecutive-blank-lines": false,
+    "no-any": true,
     "no-console": [
       true,
       "debug",
@@ -124,12 +131,25 @@
       true,
       "always"
     ],
+    "space-before-function-paren": {
+      "options": {
+        "anonymous": "never",
+        "asyncArrow": "always",
+        "constructor": "never",
+        "method": "never",
+        "named": "never"
+      }
+    },
     "template-banana-in-box": true,
     "template-no-negated-async": true,
     "trailing-comma": false,
     "triple-equals": [
       true,
       "allow-null-check"
+    ],
+    "typedef": [
+      true,
+      "call-signature"
     ],
     "typedef-whitespace": [
       true,

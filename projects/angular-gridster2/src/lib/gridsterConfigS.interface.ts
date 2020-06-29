@@ -4,6 +4,7 @@ import {GridsterItem} from './gridsterItem.interface';
 
 export interface GridsterConfigS {
   gridType: gridTypes;
+  scale?: number;
   fixedColWidth: number;
   fixedRowHeight: number;
   keepFixedHeightInMobile: boolean;
@@ -69,6 +70,7 @@ export interface GridsterConfigS {
     getLastPossiblePosition: (item: GridsterItem) => GridsterItem,
   };
 
+  // tslint:disable-next-line:no-any
   [propName: string]: any;
 }
 
@@ -76,6 +78,7 @@ export interface DragBase {
   enabled: boolean;
   delayStart: number;
 
+  // tslint:disable-next-line:no-any
   [propName: string]: any;
 }
 

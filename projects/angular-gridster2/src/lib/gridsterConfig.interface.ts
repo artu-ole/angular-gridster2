@@ -1,6 +1,5 @@
 import {GridsterComponentInterface} from './gridster.interface';
-import {GridsterItem} from './gridsterItem.interface';
-import {GridsterItemComponentInterface} from './gridsterItemComponent.interface';
+import {GridsterItem, GridsterItemComponentInterface} from './gridsterItem.interface';
 
 export type gridTypes = 'fit' | 'scrollVertical' | 'scrollHorizontal' | 'fixed' | 'verticalFixed' | 'horizontalFixed';
 export type displayGrids = 'always' | 'onDrag&Resize' | 'none';
@@ -49,6 +48,7 @@ export type dirTypes = 'ltr' | 'rtl';
 
 export interface GridsterConfig {
   gridType?: gridTypes;
+  scale?: number;
   fixedColWidth?: number;
   fixedRowHeight?: number;
   keepFixedHeightInMobile?: boolean;
@@ -126,11 +126,13 @@ export interface GridsterConfig {
     getLastPossiblePosition?: (item: GridsterItem) => GridsterItem,
   };
 
+  // tslint:disable-next-line:no-any
   [propName: string]: any;
 }
 
 export interface DragBase {
   enabled?: boolean;
+  // tslint:disable-next-line:no-any
   stop?: (item: GridsterItem, itemComponent: GridsterItemComponentInterface, event: MouseEvent) => Promise<any> | void;
   start?: (item: GridsterItem, itemComponent: GridsterItemComponentInterface, event: MouseEvent) => void;
   delayStart?: number;

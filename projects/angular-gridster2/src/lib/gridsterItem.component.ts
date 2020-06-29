@@ -1,21 +1,21 @@
 import {
   Component,
   ElementRef,
+  HostBinding,
+  Inject,
   Input,
   NgZone,
+  OnChanges,
   OnDestroy,
-  OnInit,
   Renderer2,
-  ViewEncapsulation,
-  Inject,
-  HostBinding
+  SimpleChanges,
+  ViewEncapsulation
 } from '@angular/core';
 
-import {GridsterItem} from './gridsterItem.interface';
 import {GridsterDraggable} from './gridsterDraggable.service';
 import {GridsterResizable} from './gridsterResizable.service';
 import {GridsterUtils} from './gridsterUtils.service';
-import {GridsterItemComponentInterface} from './gridsterItemComponent.interface';
+import {GridsterItem, GridsterItemComponentInterface} from './gridsterItem.interface';
 import {GridsterComponent} from './gridster.component';
 
 @Component({
@@ -24,10 +24,10 @@ import {GridsterComponent} from './gridster.component';
   styleUrls: ['./gridsterItem.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class GridsterItemComponent implements OnInit, OnDestroy, GridsterItemComponentInterface {
+export class GridsterItemComponent implements OnDestroy, OnChanges, GridsterItemComponentInterface {
   @Input() item: GridsterItem;
   $item: GridsterItem;
-  el: any;
+  el: HTMLElement;
   gridster: GridsterComponent;
   top: number;
   left: number;
@@ -43,7 +43,8 @@ export class GridsterItemComponent implements OnInit, OnDestroy, GridsterItemCom
     return this.getLayerIndex() + this.gridster.$options.baseLayerIndex;
   }
 
-  constructor(@Inject(ElementRef) el: ElementRef,  gridster: GridsterComponent, @Inject(Renderer2) public renderer: Renderer2, @Inject(NgZone) private zone: NgZone) {
+  constructor(@Inject(ElementRef) el: ElementRef, gridster: GridsterComponent, @Inject(Renderer2) public renderer: Renderer2,
+              @Inject(NgZone) private zone: NgZone) {
     this.el = el.nativeElement;
     this.$item = {
       cols: -1,
@@ -56,9 +57,17 @@ export class GridsterItemComponent implements OnInit, OnDestroy, GridsterItemCom
     this.resize = new GridsterResizable(this, gridster, this.zone);
   }
 
-  ngOnInit(): void {
-    this.updateOptions();
-    this.gridster.addItem(this);
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['item']) {
+      this.updateOptions();
+
+      if (!this.init) {
+        this.gridster.addItem(this);
+      } else {
+        // Other items might have been changed as well in the same call.
+        this.gridster.calculateLayoutDebounce();
+      }
+    }
   }
 
   updateOptions(): void {
@@ -95,7 +104,7 @@ export class GridsterItemComponent implements OnInit, OnDestroy, GridsterItemCom
     this.updateItemSize();
   }
 
-  updateItemSize() {
+  updateItemSize(): void {
     const top = this.$item.y * this.gridster.curRowHeight;
     const left = this.$item.x * this.gridster.curColWidth;
     const width = this.$item.cols * this.gridster.curColWidth - this.gridster.$options.margin;
@@ -171,6 +180,7 @@ export class GridsterItemComponent implements OnInit, OnDestroy, GridsterItemCom
       this.item.layerIndex = this.$item.layerIndex = targetIndex > topIndex ? topIndex : targetIndex;
     }
   }
+
   sendToBack(offset: number): void {
     if (offset && offset <= 0) {
       return;

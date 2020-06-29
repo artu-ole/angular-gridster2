@@ -1,12 +1,13 @@
 import {Injectable, NgZone} from '@angular/core';
 import {GridsterComponentInterface} from './gridster.interface';
 import {DirTypes} from './gridsterConfig.interface';
-import {GridsterItemComponentInterface} from './gridsterItemComponent.interface';
+import {GridsterItemComponentInterface} from './gridsterItem.interface';
 import {GridsterPush} from './gridsterPush.service';
 import {cancelScroll, scroll} from './gridsterScroll.service';
 
 import {GridsterSwap} from './gridsterSwap.service';
 import {GridsterUtils} from './gridsterUtils.service';
+import {MouseEvent2} from './gridsterResizeEventType.interface';
 
 @Injectable()
 export class GridsterDraggable {
@@ -21,6 +22,8 @@ export class GridsterDraggable {
   margin: number;
   diffTop: number;
   diffLeft: number;
+  originalClientX: number;
+  originalClientY: number;
   top: number;
   left: number;
   height: number;
@@ -30,9 +33,9 @@ export class GridsterDraggable {
   positionXBackup: number;
   positionYBackup: number;
   enabled: boolean;
-  dragStartFunction: (event: any) => void;
-  dragFunction: (event: any) => void;
-  dragStopFunction: (event: any) => void;
+  dragStartFunction: (event: MouseEvent) => void;
+  dragFunction: (event: MouseEvent) => void;
+  dragStopFunction: (event: MouseEvent) => void;
   mousemove: () => void;
   mouseup: () => void;
   mouseleave: () => void;
@@ -70,7 +73,7 @@ export class GridsterDraggable {
     }
   }
 
-  dragStart(e: any): void {
+  dragStart(e: MouseEvent): void {
     if (e.which && e.which !== 1) {
       return;
     }
@@ -99,6 +102,8 @@ export class GridsterDraggable {
     this.offsetTop = this.gridster.el.scrollTop - this.gridster.el.offsetTop;
     this.left = this.gridsterItem.left - this.margin;
     this.top = this.gridsterItem.top - this.margin;
+    this.originalClientX = e.clientX;
+    this.originalClientY = e.clientY;
     this.width = this.gridsterItem.width;
     this.height = this.gridsterItem.height;
     if (this.gridster.$options.dirType === DirTypes.RTL) {
@@ -116,7 +121,7 @@ export class GridsterDraggable {
     this.path.push({x: this.gridsterItem.item.x || 0, y: this.gridsterItem.item.y || 0});
   }
 
-  dragMove(e: any): void {
+  dragMove(e: MouseEvent): void {
     e.stopPropagation();
     e.preventDefault();
     GridsterUtils.checkTouchEvent(e);
@@ -128,14 +133,12 @@ export class GridsterDraggable {
     this.calculateItemPositionFromMousePosition(e);
   }
 
-  calculateItemPositionFromMousePosition(e: any): void {
-    if (this.gridster.$options.dirType === DirTypes.RTL) {
-      this.left = this.gridster.el.scrollWidth - e.clientX + this.diffLeft;
+  calculateItemPositionFromMousePosition(e: MouseEvent): void {
+    if (this.gridster.options.scale) {
+      this.calculateItemPositionWithScale(e, this.gridster.options.scale);
     } else {
-      this.left = e.clientX + this.offsetLeft - this.diffLeft;
+      this.calculateItemPositionWithoutScale(e);
     }
-
-    this.top = e.clientY + this.offsetTop - this.diffTop;
     this.calculateItemPosition();
     this.lastMouse.clientX = e.clientX;
     this.lastMouse.clientY = e.clientY;
@@ -144,7 +147,26 @@ export class GridsterDraggable {
     });
   }
 
-  dragStop(e: any): void {
+  calculateItemPositionWithScale(e: MouseEvent, scale: number): void {
+    if (this.gridster.$options.dirType === DirTypes.RTL) {
+      this.left = this.gridster.el.scrollWidth - this.originalClientX + ((e.clientX - this.originalClientX) / scale) + this.diffLeft;
+    } else {
+      this.left = this.originalClientX + ((e.clientX - this.originalClientX) / scale) + this.offsetLeft - this.diffLeft;
+    }
+    this.top = this.originalClientY + ((e.clientY - this.originalClientY) / scale) + this.offsetTop - this.diffTop;
+  }
+
+  calculateItemPositionWithoutScale(e: MouseEvent): void {
+    if (this.gridster.$options.dirType === DirTypes.RTL) {
+      this.left = this.gridster.el.scrollWidth - e.clientX + this.diffLeft;
+    } else {
+      this.left = e.clientX + this.offsetLeft - this.diffLeft;
+    }
+
+    this.top = e.clientY + this.offsetTop - this.diffTop;
+  }
+
+  dragStop(e: MouseEvent): void {
     e.stopPropagation();
     e.preventDefault();
 
@@ -174,7 +196,7 @@ export class GridsterDraggable {
     });
   }
 
-  cancelDrag() {
+  cancelDrag(): void {
     this.gridsterItem.$item.x = this.gridsterItem.item.x || 0;
     this.gridsterItem.$item.y = this.gridsterItem.item.y || 0;
     this.gridsterItem.setSize();
@@ -194,7 +216,7 @@ export class GridsterDraggable {
     }
   }
 
-  makeDrag() {
+  makeDrag(): void {
     if (this.gridster.$options.draggable.dropOverItems && this.gridster.options.draggable
       && this.gridster.options.draggable.dropOverItemsCallback
       && this.collision && this.collision !== true && this.collision.$item) {
@@ -219,7 +241,7 @@ export class GridsterDraggable {
     }
   }
 
-  calculateItemPosition() {
+  calculateItemPosition(): void {
     this.gridster.movingItem = this.gridsterItem.$item;
     this.positionX = this.gridster.pixelsToPositionX(this.left, Math.round);
     this.positionY = this.gridster.pixelsToPositionY(this.top, Math.round);
@@ -266,7 +288,7 @@ export class GridsterDraggable {
     this.gridster.previewStyle(true);
   }
 
-  toggle() {
+  toggle(): void {
     const enableDrag = this.gridsterItem.canBeDragged();
     if (!this.enabled && enableDrag) {
       this.enabled = !this.enabled;
@@ -280,7 +302,7 @@ export class GridsterDraggable {
     }
   }
 
-  dragStartDelay(e: any): void {
+  dragStartDelay(e: MouseEvent2): void {
     if (e.target.hasAttribute('class') && e.target.getAttribute('class').split(' ').indexOf('gridster-item-resizable-handler') > -1) {
       return;
     }
@@ -303,14 +325,14 @@ export class GridsterDraggable {
     const cancelTouchEnd = this.gridsterItem.renderer.listen('document', 'touchend', cancelDrag);
     const cancelTouchCancel = this.gridsterItem.renderer.listen('document', 'touchcancel', cancelDrag);
 
-    function cancelMove(eventMove: any) {
+    function cancelMove(eventMove: MouseEvent): void {
       GridsterUtils.checkTouchEvent(eventMove);
       if (Math.abs(eventMove.clientX - e.clientX) > 9 || Math.abs(eventMove.clientY - e.clientY) > 9) {
         cancelDrag();
       }
     }
 
-    function cancelDrag() {
+    function cancelDrag(): void {
       clearTimeout(timeout);
       cancelOnBlur();
       cancelMouse();
