@@ -13,6 +13,12 @@ angular-gridster2
 
 ### For other Angular versions check the other branches.
 
+## Visit deploy after merge
+
+`npm i`
+`npm run build-npm`
+`npm publish .\dist\angular-gridster2\`
+
 ## Install
 
 ``npm install angular-gridster2 --save``
