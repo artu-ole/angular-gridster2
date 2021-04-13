@@ -1,10 +1,7 @@
-import {Injectable} from '@angular/core';
-
 import {GridsterUtils} from './gridsterUtils.service';
 import {GridsterComponentInterface} from './gridster.interface';
 import {GridsterItem} from './gridsterItem.interface';
 
-@Injectable()
 export class GridsterEmptyCell {
   initialItem: GridsterItem | null;
   emptyCellClick: (() => void) | null;
@@ -24,11 +21,14 @@ export class GridsterEmptyCell {
   }
 
   destroy(): void {
+    // @ts-ignore
     delete this.initialItem;
+    // @ts-ignore
     delete this.gridster.movingItem;
     if (this.gridster.previewStyle) {
       this.gridster.previewStyle();
     }
+    // @ts-ignore
     delete this.gridster;
     if (this.emptyCellExit) {
       this.emptyCellExit();
@@ -82,7 +82,7 @@ export class GridsterEmptyCell {
   }
 
   emptyCellClickCb(e: MouseEvent): void {
-    if (this.gridster.movingItem || GridsterUtils.checkContentClassForEmptyCellClickEvent(this.gridster, e)) {
+    if (!this.gridster || this.gridster.movingItem || GridsterUtils.checkContentClassForEmptyCellClickEvent(this.gridster, e)) {
       return;
     }
     const item = this.getValidItemFromEvent(e);

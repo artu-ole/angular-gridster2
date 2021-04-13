@@ -17,10 +17,12 @@ export class MiscComponent implements OnInit {
       gridType: GridType.Fit,
       displayGrid: DisplayGrid.Always,
       draggable: {enabled: true},
-      disableWindowResize: false,
+      resizable: {enabled: true},
+      disableWindowResize: true,
       scrollToNewItems: false,
       disableWarnings: false,
       ignoreMarginInRow: false,
+      setGridSize: false,
       scale: 1
     };
 

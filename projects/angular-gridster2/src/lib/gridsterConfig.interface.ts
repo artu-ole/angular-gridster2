@@ -72,6 +72,7 @@ export interface GridsterConfig {
   minItemRows?: number;
   minItemArea?: number;
   maxItemArea?: number;
+  rowHeightRatio?: number;
   margin?: number;
   outerMargin?: boolean;
   outerMarginTop?: number | null;
@@ -112,7 +113,7 @@ export interface GridsterConfig {
   enableOccupiedCellDrop?: boolean;
   emptyCellClickCallback?: (event: MouseEvent, item: GridsterItem) => void;
   emptyCellContextMenuCallback?: (event: MouseEvent, item: GridsterItem) => void;
-  emptyCellDropCallback?: (event: MouseEvent, item: GridsterItem) => void;
+  emptyCellDropCallback?: (event: DragEvent, item: GridsterItem) => void;
   emptyCellDragCallback?: (event: MouseEvent, item: GridsterItem) => void;
   emptyCellDragMaxCols?: number;
   emptyCellDragMaxRows?: number;
@@ -124,6 +125,7 @@ export interface GridsterConfig {
     getNextPossiblePosition?: (newItem: GridsterItem) => boolean,
     getFirstPossiblePosition?: (item: GridsterItem) => GridsterItem,
     getLastPossiblePosition?: (item: GridsterItem) => GridsterItem,
+    getItemComponent?: (item: GridsterItem) => GridsterItemComponentInterface | undefined
   };
 
   // tslint:disable-next-line:no-any

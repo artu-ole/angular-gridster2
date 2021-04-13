@@ -1,16 +1,16 @@
-import {Injectable, Renderer2} from '@angular/core';
+import {Renderer2} from '@angular/core';
 
 import {GridsterComponentInterface} from './gridster.interface';
 import {DirTypes, GridType} from './gridsterConfig.interface';
 import {GridsterItem} from './gridsterItem.interface';
 
-@Injectable()
 export class GridsterRenderer {
 
   constructor(private gridster: GridsterComponentInterface) {
   }
 
   destroy(): void {
+    // @ts-ignore
     delete this.gridster;
   }
 
@@ -29,7 +29,7 @@ export class GridsterRenderer {
       }
 
       renderer.setStyle(el, 'margin-bottom', this.gridster.$options.margin + 'px');
-      renderer.setStyle(el, 'margin-right', '');
+      renderer.setStyle(el, DirTypes.LTR ? 'margin-right' : 'margin-left', '');
     } else {
       const x = Math.round(this.gridster.curColWidth * item.x);
       const y = Math.round(this.gridster.curRowHeight * item.y);
@@ -59,7 +59,7 @@ export class GridsterRenderer {
       }
 
       renderer.setStyle(el, 'margin-bottom', marginBottom);
-      renderer.setStyle(el, 'margin-right', marginRight);
+      renderer.setStyle(el, DirTypes.LTR ? 'margin-right' : 'margin-left', marginRight);
     }
   }
 
@@ -74,13 +74,15 @@ export class GridsterRenderer {
       removeClass2 = GridType.ScrollHorizontal;
       removeClass3 = GridType.Fixed;
     } else if (this.gridster.$options.gridType === GridType.ScrollVertical) {
-      this.gridster.curRowHeight = this.gridster.curColWidth;
+      this.gridster.curRowHeight = this.gridster.curColWidth * this.gridster.$options.rowHeightRatio;
       addClass = GridType.ScrollVertical;
       removeClass1 = GridType.Fit;
       removeClass2 = GridType.ScrollHorizontal;
       removeClass3 = GridType.Fixed;
     } else if (this.gridster.$options.gridType === GridType.ScrollHorizontal) {
-      this.gridster.curColWidth = this.gridster.curRowHeight;
+      const widthRatio = this.gridster.$options.rowHeightRatio;
+      const calWidthRatio = widthRatio >= 1 ? widthRatio : widthRatio + 1;
+      this.gridster.curColWidth = this.gridster.curRowHeight * calWidthRatio;
       addClass = GridType.ScrollHorizontal;
       removeClass1 = GridType.Fit;
       removeClass2 = GridType.ScrollVertical;
@@ -110,7 +112,7 @@ export class GridsterRenderer {
       removeClass3 = GridType.Fixed;
     }
 
-    if (this.gridster.mobile) {
+    if (this.gridster.mobile || this.gridster.$options.setGridSize && this.gridster.$options.gridType !== GridType.Fit) {
       this.gridster.renderer.removeClass(this.gridster.el, addClass);
     } else {
       this.gridster.renderer.addClass(this.gridster.el, addClass);

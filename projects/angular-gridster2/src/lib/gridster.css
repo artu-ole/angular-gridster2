@@ -36,6 +36,16 @@ gridster.mobile gridster-item {
   position: relative;
 }
 
+gridster.gridSize {
+  height: initial;
+  width: initial;
+}
+
+gridster.gridSize.fit {
+  height: 100%;
+  width: 100%;
+}
+
 gridster .gridster-column, gridster .gridster-row {
   position: absolute;
   display: none;

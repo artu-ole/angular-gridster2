@@ -9,7 +9,8 @@ angular-gridster2
 
 ### Angular implementation of angular-gridster [Demo](http://tiberiuzuld.github.io/angular-gridster2)
 
-### Requires Angular 10.x
+### Requires Angular 11.x
+
 ### For other Angular versions check the other branches.
 
 ## Install
@@ -124,12 +125,14 @@ Option 2 (with text selection):
 ### Contributors [here](https://github.com/tiberiuzuld/angular-gridster2/graphs/contributors)
 
 ### Supporters
+@ea20140129
 @matpag (Mattia Pagini)
-Derek
+@DerekJDev (Derek Johnson)
 
 ### [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/tiberiuzuld)
 
 ### License
- The MIT License
- 
- Copyright (c) 2020 Tiberiu Zuld
+
+The MIT License
+
+Copyright (c) 2021 Tiberiu Zuld

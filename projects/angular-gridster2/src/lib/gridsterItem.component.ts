@@ -7,6 +7,7 @@ import {
   NgZone,
   OnChanges,
   OnDestroy,
+  OnInit,
   Renderer2,
   SimpleChanges,
   ViewEncapsulation
@@ -24,7 +25,7 @@ import {GridsterComponent} from './gridster.component';
   styleUrls: ['./gridsterItem.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class GridsterItemComponent implements OnDestroy, OnChanges, GridsterItemComponentInterface {
+export class GridsterItemComponent implements OnInit, OnDestroy, OnChanges, GridsterItemComponentInterface {
   @Input() item: GridsterItem;
   $item: GridsterItem;
   el: HTMLElement;
@@ -57,16 +58,20 @@ export class GridsterItemComponent implements OnDestroy, OnChanges, GridsterItem
     this.resize = new GridsterResizable(this, gridster, this.zone);
   }
 
+  ngOnInit(): void {
+    this.gridster.addItem(this);
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['item']) {
+    if (changes.item) {
       this.updateOptions();
 
       if (!this.init) {
-        this.gridster.addItem(this);
-      } else {
-        // Other items might have been changed as well in the same call.
         this.gridster.calculateLayoutDebounce();
       }
+    }
+    if (changes.item && changes.item.previousValue) {
+      this.setSize();
     }
   }
 
@@ -91,10 +96,13 @@ export class GridsterItemComponent implements OnDestroy, OnChanges, GridsterItem
 
   ngOnDestroy(): void {
     this.gridster.removeItem(this);
+    // @ts-ignore
     delete this.gridster;
     this.drag.destroy();
+    // @ts-ignore
     delete this.drag;
     this.resize.destroy();
+    // @ts-ignore
     delete this.resize;
   }
 
@@ -109,6 +117,9 @@ export class GridsterItemComponent implements OnDestroy, OnChanges, GridsterItem
     const left = this.$item.x * this.gridster.curColWidth;
     const width = this.$item.cols * this.gridster.curColWidth - this.gridster.$options.margin;
     const height = this.$item.rows * this.gridster.curRowHeight - this.gridster.$options.margin;
+
+    this.top = top;
+    this.left = left;
 
     if (!this.init && width > 0 && height > 0) {
       this.init = true;
@@ -129,8 +140,6 @@ export class GridsterItemComponent implements OnDestroy, OnChanges, GridsterItem
         this.gridster.options.itemResizeCallback(this.item, this);
       }
     }
-    this.top = top;
-    this.left = left;
   }
 
   itemChanged(): void {
