@@ -11,7 +11,12 @@ export type compactTypes =
   | 'compactLeft&Up'
   | 'compactRight'
   | 'compactUp&Right'
-  | 'compactRight&Up';
+  | 'compactRight&Up'
+  | 'compactDown'
+  | 'compactDown&Left'
+  | 'compactLeft&Down'
+  | 'compactDown&Right'
+  | 'compactRight&Down';
 
 export enum GridType {
   Fit = 'fit',
@@ -37,6 +42,11 @@ export enum CompactType {
   CompactRight = 'compactRight',
   CompactUpAndRight = 'compactUp&Right',
   CompactRightAndUp = 'compactRight&Up',
+  CompactDown = 'compactDown',
+  CompactDownAndLeft = 'compactDown&Left',
+  CompactLeftAndDown = 'compactLeft&Down',
+  CompactDownAndRight = 'compactDown&Right',
+  CompactRightAndDown = 'compactRight&Down'
 }
 
 export enum DirTypes {
@@ -128,13 +138,13 @@ export interface GridsterConfig {
     getItemComponent?: (item: GridsterItem) => GridsterItemComponentInterface | undefined
   };
 
-  // tslint:disable-next-line:no-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [propName: string]: any;
 }
 
 export interface DragBase {
   enabled?: boolean;
-  // tslint:disable-next-line:no-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   stop?: (item: GridsterItem, itemComponent: GridsterItemComponentInterface, event: MouseEvent) => Promise<any> | void;
   start?: (item: GridsterItem, itemComponent: GridsterItemComponentInterface, event: MouseEvent) => void;
   delayStart?: number;

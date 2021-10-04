@@ -2,6 +2,7 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  EventEmitter,
   Inject,
   Input,
   NgZone,
@@ -24,7 +25,7 @@ import {GridsterRenderer} from './gridsterRenderer.service';
 import {GridsterUtils} from './gridsterUtils.service';
 
 @Component({
-  // tslint:disable-next-line:component-selector
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'gridster',
   templateUrl: './gridster.html',
   styleUrls: ['./gridster.css'],
@@ -34,7 +35,6 @@ export class GridsterComponent implements OnInit, OnChanges, OnDestroy, Gridster
   @Input() options: GridsterConfig;
   calculateLayoutDebounce: () => void;
   movingItem: GridsterItem | null;
-  previewStyle: () => void;
   el: HTMLElement;
   $options: GridsterConfigS;
   mobile: boolean;
@@ -52,6 +52,7 @@ export class GridsterComponent implements OnInit, OnChanges, OnDestroy, Gridster
   emptyCell: GridsterEmptyCell;
   compact: GridsterCompact;
   gridRenderer: GridsterRenderer;
+  previewStyle$: EventEmitter<GridsterItem> = new EventEmitter<GridsterItem>();
 
   constructor(@Inject(ElementRef) el: ElementRef, @Inject(Renderer2) public renderer: Renderer2,
               @Inject(ChangeDetectorRef) public cdRef: ChangeDetectorRef,
@@ -165,6 +166,7 @@ export class GridsterComponent implements OnInit, OnChanges, OnDestroy, Gridster
   }
 
   ngOnDestroy(): void {
+    this.previewStyle$.complete();
     if (this.windowResize) {
       this.windowResize();
     }
@@ -186,12 +188,14 @@ export class GridsterComponent implements OnInit, OnChanges, OnDestroy, Gridster
   }
 
   onResize(): void {
-    if (this.options.setGridSize) { // reset width/height so the size is recalculated afterwards
-      this.renderer.setStyle(this.el, 'width', '');
-      this.renderer.setStyle(this.el, 'height', '');
+    if (this.el.clientWidth) {
+      if (this.options.setGridSize) { // reset width/height so the size is recalculated afterwards
+        this.renderer.setStyle(this.el, 'width', '');
+        this.renderer.setStyle(this.el, 'height', '');
+      }
+      this.setGridSize();
+      this.calculateLayout();
     }
-    this.setGridSize();
-    this.calculateLayout();
   }
 
   checkIfToResize(): boolean {
@@ -556,7 +560,7 @@ export class GridsterComponent implements OnInit, OnChanges, OnDestroy, Gridster
       collision = true;
     }
     if (!collision) {
-      const c = this.findItemWithItemForSwaping(item);
+      const c = this.findItemWithItemForSwapping(item);
       if (c) {
         collision = c;
       }
@@ -565,7 +569,7 @@ export class GridsterComponent implements OnInit, OnChanges, OnDestroy, Gridster
   }
 
   // identical to findItemWithItem() except that this function calls checkCollisionTwoItemsForSwaping() instead of checkCollisionTwoItems()
-  findItemWithItemForSwaping(item: GridsterItem): GridsterItemComponentInterface | boolean {
+  findItemWithItemForSwapping(item: GridsterItem): GridsterItemComponentInterface | boolean {
     let widgetsIndex: number = this.grid.length - 1;
     let widget: GridsterItemComponentInterface;
     for (; widgetsIndex > -1; widgetsIndex--) {
@@ -577,9 +581,20 @@ export class GridsterComponent implements OnInit, OnChanges, OnDestroy, Gridster
     return false;
   }
 
+  previewStyle(drag = false): void {
+    if (this.movingItem) {
+      if (this.compact && drag) {
+        this.compact.checkCompactItem(this.movingItem);
+      }
+      this.previewStyle$.next(this.movingItem);
+    } else {
+      this.previewStyle$.next();
+    }
+  }
+
   // ------ End of functions for swapWhileDragging option
 
-  // tslint:disable-next-line:member-ordering
+  // eslint-disable-next-line @typescript-eslint/member-ordering
   private static getNewArrayLength(length: number, overallSize: number, size: number): number {
     const newLength = Math.max(length, Math.floor(overallSize / size));
 
