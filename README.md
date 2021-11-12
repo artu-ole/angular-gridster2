@@ -17,7 +17,7 @@ angular-gridster2
 
 `npm i`
 `npm run build-npm`
-`npm publish .\dist\angular-gridster2\`
+`npm publish .\dist\angular-gridster2 --registry https://nexus.visit.fi/repository/npm-releases/`
 
 ## Install
 
