@@ -1,7 +1,7 @@
-import {GridsterDraggable} from './gridsterDraggable.service';
-import {Renderer2} from '@angular/core';
-import {GridsterResizable} from './gridsterResizable.service';
-import {GridsterComponentInterface} from './gridster.interface';
+import { GridsterDraggable } from './gridsterDraggable.service';
+import { Renderer2 } from '@angular/core';
+import { GridsterResizable } from './gridsterResizable.service';
+import { GridsterComponentInterface } from './gridster.interface';
 
 export abstract class GridsterItemComponentInterface {
   item: GridsterItem;
@@ -19,6 +19,16 @@ export abstract class GridsterItemComponentInterface {
   checkItemChanges: (newValue: GridsterItem, oldValue: GridsterItem) => void;
   canBeDragged: () => boolean;
   canBeResized: () => boolean;
+  getResizableHandles: () => {
+    s: boolean;
+    e: boolean;
+    n: boolean;
+    w: boolean;
+    se: boolean;
+    ne: boolean;
+    sw: boolean;
+    nw: boolean;
+  };
   bringToFront: (offset: number) => void;
   sendToBack: (v: number) => void;
   el: HTMLElement;
@@ -32,9 +42,22 @@ export interface GridsterItem {
   rows: number;
   cols: number;
   layerIndex?: number;
-  initCallback?: (item: GridsterItem, itemComponent: GridsterItemComponentInterface) => void;
+  initCallback?: (
+    item: GridsterItem,
+    itemComponent: GridsterItemComponentInterface
+  ) => void;
   dragEnabled?: boolean;
   resizeEnabled?: boolean;
+  resizableHandles?: {
+    s?: boolean;
+    e?: boolean;
+    n?: boolean;
+    w?: boolean;
+    se?: boolean;
+    ne?: boolean;
+    sw?: boolean;
+    nw?: boolean;
+  };
   compactEnabled?: boolean;
   maxItemRows?: number;
   minItemRows?: number;

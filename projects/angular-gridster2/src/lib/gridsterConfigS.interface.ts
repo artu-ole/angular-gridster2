@@ -1,6 +1,14 @@
-import {GridsterComponentInterface} from './gridster.interface';
-import {compactTypes, dirTypes, displayGrids, gridTypes} from './gridsterConfig.interface';
-import {GridsterItem, GridsterItemComponentInterface} from './gridsterItem.interface';
+import { GridsterComponentInterface } from './gridster.interface';
+import {
+  compactTypes,
+  dirTypes,
+  displayGrids,
+  gridTypes
+} from './gridsterConfig.interface';
+import {
+  GridsterItem,
+  GridsterItemComponentInterface
+} from './gridsterItem.interface';
 
 export interface GridsterConfigS {
   gridType: gridTypes;
@@ -12,6 +20,7 @@ export interface GridsterConfigS {
   setGridSize: boolean;
   compactType: compactTypes;
   mobileBreakpoint: number;
+  useBodyForBreakpoint: boolean;
   allowMultiLayer: boolean;
   defaultLayerIndex: number;
   maxLayerIndex: number;
@@ -28,6 +37,7 @@ export interface GridsterConfigS {
   minItemRows: number;
   minItemArea: number;
   maxItemArea: number;
+  addEmptyRowsCount: number;
   rowHeightRatio: number;
   margin: number;
   outerMargin: boolean;
@@ -54,6 +64,7 @@ export interface GridsterConfigS {
   scrollToNewItems: boolean;
   disableScrollHorizontal?: boolean;
   disableScrollVertical?: boolean;
+  enableBoundaryControl?: boolean;
   enableEmptyCellClick: boolean;
   enableEmptyCellContextMenu: boolean;
   enableEmptyCellDrop: boolean;
@@ -64,12 +75,14 @@ export interface GridsterConfigS {
   ignoreMarginInRow: boolean;
   dirType: dirTypes;
   api: {
-    resize: () => void,
-    optionsChanged: () => void,
-    getNextPossiblePosition: (newItem: GridsterItem) => boolean,
-    getFirstPossiblePosition: (item: GridsterItem) => GridsterItem,
-    getLastPossiblePosition: (item: GridsterItem) => GridsterItem,
-    getItemComponent: (item: GridsterItem) => GridsterItemComponentInterface | undefined;
+    resize: () => void;
+    optionsChanged: () => void;
+    getNextPossiblePosition: (newItem: GridsterItem) => boolean;
+    getFirstPossiblePosition: (item: GridsterItem) => GridsterItem;
+    getLastPossiblePosition: (item: GridsterItem) => GridsterItem;
+    getItemComponent: (
+      item: GridsterItem
+    ) => GridsterItemComponentInterface | undefined;
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -90,19 +103,23 @@ export interface Draggable extends DragBase {
   dragHandleClass: string;
   dropOverItems: boolean;
   moveElementAfterDrag: boolean;
-  dropOverItemsCallback: (source: GridsterItem, target: GridsterItem, grid?: GridsterComponentInterface) => void;
+  dropOverItemsCallback: (
+    source: GridsterItem,
+    target: GridsterItem,
+    grid?: GridsterComponentInterface
+  ) => void;
 }
 
 export interface Resizable extends DragBase {
   handles: {
-    s: boolean,
-    e: boolean,
-    n: boolean,
-    w: boolean,
-    se: boolean,
-    ne: boolean,
-    sw: boolean,
-    nw: boolean
+    s: boolean;
+    e: boolean;
+    n: boolean;
+    w: boolean;
+    se: boolean;
+    ne: boolean;
+    sw: boolean;
+    nw: boolean;
   };
 }
 
