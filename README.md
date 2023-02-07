@@ -1,42 +1,43 @@
 # angular-gridster2
 
 [![npm version](https://badge.fury.io/js/angular-gridster2.svg)](https://badge.fury.io/js/angular-gridster2)
-![Node CI](https://github.com/tiberiuzuld/angular-gridster2/workflows/Node%20CI/badge.svg)
+![Node CI](https://github.com/tiberiuzuld/angular-gridster2/actions/workflows/deploy-demo.yml/badge.svg)
 [![downloads](https://img.shields.io/npm/dm/angular-gridster2.svg)](https://www.npmjs.com/package/angular-gridster2)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/tiberiuzuld)
 
 ### Angular implementation of angular-gridster [Demo](http://tiberiuzuld.github.io/angular-gridster2)
 
-### Requires Angular 14.x
+### Requires Angular 15.x
 
 ### For other Angular versions check the other branches.
 
 ## Visit deploy after merge
 
 `npm i`
-`npm run build-npm`
+`npm run build-lib`
 `npm publish .\dist\angular-gridster2 --registry https://nexus.visit.fi/repository/npm-releases/`
-
-## Install
-
-`npm install angular-gridster2 --save`
-
-Should work out of the box with webpack, respectively angular-cli.
-
-```javascript
-import { GridsterModule } from 'angular-gridster2';
-
-@NgModule({
-  imports: [ GridsterModule ],
-  ...
-})
-```
 
 ## Browser support
 
 What Angular supports [here](https://github.com/angular/angular)
 
+## Install
+
+`npm install angular-gridster2 --save`
+
 ## How to use
+
+```javascript
+import {NgForOf} from '@angular/common';
+import {Component} from '@angular/core';
+import {GridsterComponent, GridsterItemComponent} from 'angular-gridster2';
+
+@Component({
+  standalone: true,
+  imports: [NgForOf, GridsterComponent, GridsterItemComponent],
+  ...
+})
+```
 
 ```html
 <gridster [options]="options">
@@ -155,4 +156,4 @@ Option 2 (with text selection):
 
 The MIT License
 
-Copyright (c) 2022 Tiberiu Zuld
+Copyright (c) 2023 Tiberiu Zuld

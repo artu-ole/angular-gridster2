@@ -9,14 +9,15 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { GridsterRenderer } from './gridsterRenderer.service';
 import { GridsterItem } from './gridsterItem.interface';
+import { GridsterRenderer } from './gridsterRenderer.service';
 
 @Component({
   selector: 'gridster-preview',
   template: '',
   styleUrls: ['./gridsterPreview.css'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  standalone: true
 })
 export class GridsterPreviewComponent implements OnInit, OnDestroy {
   @Input() previewStyle$: EventEmitter<GridsterItem | null>;
@@ -35,7 +36,9 @@ export class GridsterPreviewComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.sub.unsubscribe();
+    if(this.sub) {
+      this.sub.unsubscribe();
+    }
   }
 
   private previewStyle(item: GridsterItem | null): void {
